@@ -1,0 +1,26 @@
+# Zig build artifacts
+.zig-cache/
+zig-out/
+
+# Documentation build output
+docs/.vitepress/dist/
+docs/.vitepress/cache/
+docs/node_modules/
+
+# Database files (created by tests and examples)
+*.zkv
+
+# Editor and IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+zig-pkg/

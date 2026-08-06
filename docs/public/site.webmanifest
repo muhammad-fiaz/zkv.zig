@@ -1,0 +1,20 @@
+{
+  "name": "zkv.zig",
+  "short_name": "zkv",
+  "description": "A super-fast, lightweight embedded key-value database for Zig",
+  "icons": [
+    {
+      "src": "/zkv.zig/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/zkv.zig/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#f7a41d",
+  "background_color": "#ffffff",
+  "display": "standalone"
+}
