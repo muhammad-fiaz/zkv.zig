@@ -1,11 +1,9 @@
----
-title: Update Operations
-description: Update specific keys, batch updates, transactions, and delete.
----
-
 # Update Operations
 
 Update specific keys, batch replace values, and conditional updates.
+
+> [!IMPORTANT]
+> `set()` on an existing key overwrites the previous value. There is no separate update operation.
 
 ```zig
 const std = @import("std");

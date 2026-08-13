@@ -1,9 +1,4 @@
----
-title: Export & Import
-description: Overview of backup, restore, JSONL, CSV, and snapshots with zkv.zig.
----
-
-# Export & Import
+# Export and Import
 
 ZKV provides multiple ways to move data in and out of the database.
 
@@ -14,9 +9,9 @@ ZKV provides multiple ways to move data in and out of the database.
 | `exportData(.raw_snapshot)` | ZKV native | Lossless database copies |
 | `exportData(.jsonl)` | JSON Lines | Interoperability with other tools |
 | `exportData(.csv)` | CSV | Spreadsheets and data analysis |
-| `getSnapshot()` | In-memory | Point-in-time reads |
+| `getSnapshot()` | In memory | Point in time reads |
 
-## Backup & Restore
+## Backup and Restore
 
 ```zig
 // Backup
@@ -27,7 +22,7 @@ defer std.heap.page_allocator.free(backup);
 const count = try restored.importData(backup, .raw_snapshot);
 ```
 
-See [Backup & Restore](./backup-restore) for details.
+See [Backup and Restore](./backup-restore) for details.
 
 ## JSONL Export
 
@@ -110,7 +105,7 @@ pub fn main() !void {
     defer std.heap.page_allocator.free(csv);
     std.debug.print("{s}\n", .{csv});
 
-    // === In-Memory Snapshot ===
+    // === In Memory Snapshot ===
     std.debug.print("=== Snapshot ===\n", .{});
     var snapshot = db.getSnapshot();
     defer snapshot.deinit(allocator);

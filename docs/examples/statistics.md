@@ -1,11 +1,9 @@
----
-title: Statistics
-description: Track reads, writes, hits, misses, and database info.
----
-
 # Statistics
 
-Monitor database performance with built-in stats tracking.
+Monitor database performance with built in stats tracking.
+
+> [!NOTE]
+> Call `resetStats()` to zero out counters. Stats are tracked from the time the database is opened.
 
 ```zig
 const std = @import("std");

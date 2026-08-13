@@ -34,8 +34,8 @@ std.debug.print("Imported {d} entries\n", .{count});
 | Format | Description |
 |--------|-------------|
 | `.raw_snapshot` | Native binary format with ZKV header, fastest |
-| `.jsonl` | JSON Lines — one JSON object per line, human-readable |
-| `.csv` | Comma-separated values, spreadsheet-compatible |
+| `.jsonl` | JSON Lines — one JSON object per line, human readable |
+| `.csv` | Comma separated values, spreadsheet compatible |
 
 ## Streaming Export/Import
 
@@ -66,6 +66,9 @@ defer restored.close();
 const count = try restored.importData(backup, .raw_snapshot);
 ```
 
+> [!IMPORTANT]
+> Always back up your database before performing imports. The restore operation overwrites existing data.
+
 ## Get Snapshot
 
 ```zig
@@ -76,3 +79,6 @@ for (snapshot.items) |entry| {
     std.debug.print("{s} = {s}\n", .{ entry.key, entry.value });
 }
 ```
+
+> [!TIP]
+> Use `.raw_snapshot` format for fastest export and import. Use `.jsonl` when you need human readable data.

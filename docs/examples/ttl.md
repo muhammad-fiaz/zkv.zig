@@ -1,11 +1,9 @@
----
-title: TTL
-description: Time-to-live with putTTL, ttlRemaining, and purgeExpired.
----
-
 # TTL
 
 Set expiration times on keys with millisecond precision.
+
+> [!IMPORTANT]
+> Expired keys are not automatically removed. Call `purgeExpired()` to remove them.
 
 ```zig
 const std = @import("std");

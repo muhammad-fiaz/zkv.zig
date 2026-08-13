@@ -1,11 +1,9 @@
----
-title: Basic CRUD
-description: Create, read, update, and delete key-value pairs in zkv.zig.
----
-
 # Basic CRUD
 
-Demonstrates all core operations using the collection-first API.
+Demonstrates all core operations using the collection first API.
+
+> [!NOTE]
+> Empty values (`""`) are distinct from missing keys. `get()` returns `null` for missing keys but returns a zero length slice for empty values.
 
 ```zig
 const std = @import("std");

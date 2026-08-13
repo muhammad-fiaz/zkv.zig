@@ -1,8 +1,3 @@
----
-title: Options
-description: Configuration options for zkv.zig
----
-
 # Options
 
 The `Options` struct configures database behavior at open time.
@@ -13,14 +8,14 @@ The `Options` struct configures database behavior at open time.
 const options = zkv.Options{
     .path = "data.zkv",               // Database file path
     .create_if_missing = true,         // Create file if it doesn't exist
-    .read_only = false,                // Open in read-only mode
+    .read_only = false,                // Open in read only mode
     .page_size = 4096,                 // Page size in bytes
     .max_key_size = 1024,              // Max key length in bytes
     .max_value_size = 1024 * 1024,     // Max value length (1 MB)
     .cache_size_bytes = 1024 * 1024,   // Cache size (1 MB)
     .checksum = .crc32c,               // Checksum algorithm
     .compression = .none,              // Compression algorithm
-    .wal_enabled = true,               // Enable write-ahead log
+    .wal_enabled = true,               // Enable write ahead log
 };
 ```
 
@@ -34,10 +29,13 @@ const options = zkv.Options{
 | `page_size` | `u32` | `4096` | Storage page size in bytes |
 | `max_key_size` | `usize` | `1024` | Maximum allowed key length |
 | `max_value_size` | `usize` | `1048576` | Maximum allowed value length |
-| `cache_size_bytes` | `usize` | `1048576` | In-memory cache budget |
+| `cache_size_bytes` | `usize` | `1048576` | In memory cache budget |
 | `checksum` | `ChecksumKind` | `.crc32c` | Integrity checksum algorithm |
 | `compression` | `Compression` | `.none` | Value compression codec |
-| `wal_enabled` | `bool` | `true` | Write-ahead log for durability |
+| `wal_enabled` | `bool` | `true` | Write ahead log for durability |
+
+> [!IMPORTANT]
+> The write ahead log (WAL) ensures durability. Disable only if you can afford to lose recent writes.
 
 ## Compression Formats
 
@@ -50,14 +48,15 @@ const options = zkv.Options{
 | `.lzma` | LZMA — high ratio, slower (stdlib, decompress only) |
 | `.xz` | XZ — high ratio (stdlib, decompress only) |
 
-Compression works automatically on all reads/writes. The format is detected from metadata when reopening a database.
+> [!NOTE]
+> Compression works automatically on all reads/writes. The format is detected from metadata when reopening a database.
 
 ## Checksum Algorithms
 
 | Algorithm | Description |
 |-----------|-------------|
-| `.crc32c` | CRC32C — hardware-accelerated on x86_64 |
-| `.xxhash` | xxHash — fast non-cryptographic hash |
+| `.crc32c` | CRC32C — hardware accelerated on x86_64 |
+| `.xxhash` | xxHash — fast non cryptographic hash |
 
 ## Export/Import Options
 

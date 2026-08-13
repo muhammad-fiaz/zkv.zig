@@ -1,6 +1,6 @@
 ---
 title: TTL Operations
-description: Set time-to-live on keys and auto-expire data with zkv.zig.
+description: Set time to live on keys and auto expire data with zkv.zig.
 ---
 
 # TTL Operations
@@ -16,7 +16,7 @@ try db.putTTL("session:abc", "token123", 5000);
 
 ## Check Remaining TTL
 
-Get the remaining time-to-live in milliseconds. Returns `?i64`:
+Get the remaining time to live in milliseconds. Returns `?i64`:
 
 ```zig
 const remaining = db.ttlRemaining("session:abc");
@@ -36,6 +36,9 @@ const purged = try db.purgeExpired();
 std.debug.print("Removed {d} expired keys\n", .{purged});
 ```
 
+> [!TIP]
+> Call `purgeExpired()` periodically to free up storage from expired entries.
+
 ## Set Custom Time
 
 Override the internal clock (useful for testing):
@@ -54,3 +57,6 @@ try db.putTTL("session:user123", "auth_token", ttl_ms);
 // Periodically clean up
 _ = try db.purgeExpired();
 ```
+
+> [!IMPORTANT]
+> TTL values are in milliseconds. A value of `5000` means the key expires in 5 seconds.

@@ -50,3 +50,6 @@ exe.root_module.addImport("zkv", zkv_dep.module("zkv"));
 
 - Zig 0.16+
 - External dependencies: zstd, brotli (bundled via zig-cache)
+
+> [!NOTE]
+> zkv.zig requires Zig 0.16 or later. External dependencies (zstd, brotli) are bundled automatically via zig-cache.

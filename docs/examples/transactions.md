@@ -1,11 +1,9 @@
----
-title: Transactions
-description: Atomic writes with begin, commit, rollback, view, and update.
----
-
 # Transactions
 
-ACID transactions with commit, rollback, auto-commit (`update`), and auto-rollback (`view`).
+ACID transactions with commit, rollback, auto commit (`update`), and auto rollback (`view`).
+
+> [!TIP]
+> Use `view()` for read only transactions that automatically rollback, and `update()` for write transactions that automatically commit.
 
 ```zig
 const std = @import("std");

@@ -1,11 +1,11 @@
 ---
 title: Getting Started
-description: Quick introduction to zkv.zig - a fast, embedded key-value database for Zig.
+description: Quick introduction to zkv.zig - a fast, embedded key value database for Zig.
 ---
 
 # Getting Started
 
-zkv.zig is a lightweight, embedded key-value database for Zig. It supports TTL, transactions, batch operations, queries, compression, and multiple export formats — all in a single file.
+zkv.zig is a lightweight, embedded key value database for Zig. It supports TTL, transactions, batch operations, queries, compression, and multiple export formats — all in a single file.
 
 ## Basic Usage
 
@@ -51,18 +51,24 @@ pub fn main() !void {
 
 ## Key Concepts
 
-- **Collection-First**: All CRUD goes through `db.collection("name")`
+- **Collection First**: All CRUD goes through `db.collection("name")`
 - **Key/Value**: Both are `[]const u8` — raw byte slices.
 - **No schema**: Store any bytes; no type constraints.
 - **Empty Values**: Zero-length values are distinct from missing keys.
 - **ACID transactions**: Atomic reads and writes.
-- **TTL**: Auto-expiring keys with millisecond precision.
+- **TTL**: Auto expiring keys with millisecond precision.
 - **Compression**: Automatic zstd, brotli, gzip on all writes; lzma, xz decompress supported.
+
+> [!NOTE]
+> All data is stored as raw byte slices — there are no type constraints or schemas to define.
 
 ## Next Steps
 
 - [Installation](/guide/installation) — Add zkv to your project
 - [CRUD Operations](/guide/crud) — Put, get, delete, and more
-- [Transactions](/guide/transactions) — Atomic multi-key operations
+- [Transactions](/guide/transactions) — Atomic multi key operations
 - [Batch Operations](/guide/batch) — Bulk writes with collections
 - [Compression](/api/options) — Configure compression algorithms
+
+> [!TIP]
+> Start with the CRUD Operations guide to learn the basics of reading and writing data.

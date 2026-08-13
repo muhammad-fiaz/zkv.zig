@@ -1,11 +1,9 @@
----
-title: Snapshot
-description: In-memory point-in-time snapshots with zkv.zig.
----
-
 # Snapshot
 
-Take an in-memory snapshot of all entries at a point in time. Useful for consistent reads without locking the database.
+Take an in memory snapshot of all entries at a point in time. Useful for consistent reads without locking the database.
+
+> [!NOTE]
+> Snapshots are in memory only and lost when the process exits. For persistent copies, use `exportData(.raw_snapshot)` instead.
 
 ## Usage
 
@@ -41,7 +39,7 @@ pub fn main() !void {
     try users.set("2:name", "Bob");
     try configs.set("theme", "dark");
 
-    // Take in-memory snapshot.
+    // Take in memory snapshot.
     var snapshot = db.getSnapshot();
     defer snapshot.deinit(allocator);
 
@@ -55,7 +53,7 @@ pub fn main() !void {
 ## When to Use
 
 - Consistent reads across multiple keys
-- Export a point-in-time view of the database
+- Export a point in time view of the database
 - Debug or inspect database contents
 - Feed data to serialization without locking
 
@@ -63,7 +61,7 @@ pub fn main() !void {
 
 | Feature | Snapshot | Backup |
 |---------|----------|--------|
-| Storage | In-memory (`ArrayList`) | File on disk |
+| Storage | In memory (`ArrayList`) | File on disk |
 | Speed | Fast (no I/O) | Slower (writes to disk) |
 | Persistence | Lost when process exits | Permanent |
-| Use case | Read-only inspection | Disaster recovery |
+| Use case | Read only inspection | Disaster recovery |

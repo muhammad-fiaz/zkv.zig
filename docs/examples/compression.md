@@ -1,11 +1,9 @@
----
-title: Compression
-description: None, zstd, brotli, gzip compression with auto-detect.
----
-
 # Compression
 
 Compare compression algorithms and use them for data efficiency.
+
+> [!TIP]
+> Zstd offers the best balance of speed and compression ratio. Gzip uses the Zig standard library with no external dependencies.
 
 ```zig
 const std = @import("std");
@@ -59,14 +57,14 @@ pub fn main() !void {
         try items.set("key1", "The quick brown fox jumps over the lazy dog");
     }
 
-    // Auto-detect on reopen
+    // Auto detect on reopen
     {
         var db = try zkv.Database.open(allocator, .{
             .path = "examples/compress_zstd.zkv",
         });
         defer db.close();
         const items = db.collection("items");
-        // Compression format auto-detected from metadata
+        // Compression format auto detected from metadata
     }
 }
 ```

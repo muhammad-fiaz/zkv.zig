@@ -1,11 +1,6 @@
----
-title: API Overview
-description: Quick reference for the zkv.zig API
----
-
 # API Overview
 
-zkv.zig is an embedded key-value database written in Zig. It provides a simple, fast API for storing and retrieving key-value pairs with support for TTL, transactions, compression, batch operations, and collections.
+zkv.zig is an embedded key value database written in Zig. It provides a simple, fast API for storing and retrieving key value pairs with support for TTL, transactions, compression, batch operations, and collections.
 
 ## Quick Reference
 
@@ -22,7 +17,7 @@ zkv.zig is an embedded key-value database written in Zig. It provides a simple, 
 | `db.resetStats()` | Reset statistics counters |
 | `db.checkpoint()` | Flush WAL to main database |
 | `db.compact()` | Reclaim free space |
-| `db.estimateSize()` | Estimate in-memory size |
+| `db.estimateSize()` | Estimate in memory size |
 | `db.exportData(format)` | Export to buffer (raw/jsonl/csv) |
 | `db.importData(data, format)` | Import from buffer |
 
@@ -30,15 +25,15 @@ zkv.zig is an embedded key-value database written in Zig. It provides a simple, 
 
 | Method | Description |
 |--------|-------------|
-| `collection.set(key, value)` | Insert or update a key-value pair |
+| `collection.set(key, value)` | Insert or update a key value pair |
 | `collection.get(key)` | Retrieve a value by key (returns `?[]const u8`) |
-| `collection.delete(key)` | Remove a key-value pair |
+| `collection.delete(key)` | Remove a key value pair |
 | `collection.exists(key)` | Check if a key exists |
 | `collection.count()` | Get number of entries in collection |
 | `collection.clear()` | Remove all entries in collection |
 | `collection.isEmpty()` | Check if collection has no entries |
 | `collection.size()` | Estimate collection size in bytes |
-| `collection.entries()` | Get all key-value pairs |
+| `collection.entries()` | Get all key value pairs |
 | `collection.keys()` | Get all keys |
 | `collection.values()` | Get all values |
 | `collection.first()` | Get first entry |
@@ -67,11 +62,14 @@ zkv.zig is an embedded key-value database written in Zig. It provides a simple, 
 |--------|-------------|
 | `db.begin(read_only)` | Start a transaction |
 | `db.transaction()` | Convenience: begin write transaction |
-| `db.readTransaction()` | Convenience: begin read-only transaction |
+| `db.readTransaction()` | Convenience: begin read only transaction |
 | `db.commitTransaction(&txn)` | Commit and apply transaction |
 | `db.rollbackTransaction(&txn)` | Rollback transaction |
-| `db.view(context, T, func)` | Auto-rollback read transaction |
-| `db.update(context, T, func)` | Auto-commit write transaction |
+| `db.view(context, T, func)` | Auto rollback read transaction |
+| `db.update(context, T, func)` | Auto commit write transaction |
+
+> [!TIP]
+> Use `db.view()` and `db.update()` for automatic transaction management. They handle commit and rollback automatically.
 
 ### Query Operations
 
@@ -98,10 +96,13 @@ zkv.zig is an embedded key-value database written in Zig. It provides a simple, 
 
 | Method | Description |
 |--------|-------------|
-| `db.putTTL(key, value, ttl_ms)` | Insert with time-to-live in milliseconds |
+| `db.putTTL(key, value, ttl_ms)` | Insert with time to live in milliseconds |
 | `db.ttlRemaining(key)` | Get remaining TTL in ms, or null |
 | `db.purgeExpired()` | Remove expired entries, return count |
 | `db.setTime(time_ms)` | Set the logical clock |
+
+> [!NOTE]
+> TTL values are in milliseconds. Use `db.purgeExpired()` periodically to clean up expired entries.
 
 ### Collection Management
 
@@ -120,6 +121,6 @@ zkv.zig is an embedded key-value database written in Zig. It provides a simple, 
 | `Batch` | Bulk operation queue |
 | `Transaction` | ACID transaction |
 | `Options` | Database configuration |
-| `Entry` | Key-value pair struct |
+| `Entry` | Key value pair struct |
 | `DatabaseInfo` | Database metadata |
 | `StatsInfo` | Operation statistics |

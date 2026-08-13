@@ -1,8 +1,3 @@
----
-title: Database API
-description: Full API reference for the Database struct
----
-
 # Database API
 
 The `Database` struct is the main entry point for zkv.zig.
@@ -17,7 +12,7 @@ var db = try zkv.Database.open(allocator, .{
 defer db.close();
 ```
 
-## Collection-First API
+## Collection First API
 
 All CRUD operations go through collections:
 
@@ -28,6 +23,9 @@ const posts = db.collection("posts");
 try users.set("1:name", "Alice");
 try posts.set("1:title", "Hello");
 ```
+
+> [!TIP]
+> Collections are lightweight and don't need to be created explicitly. Simply call `db.collection("name")` to get a handle.
 
 ## Basic CRUD
 
@@ -66,6 +64,9 @@ std.debug.print("len: {}\n", .{users.get("1:bio").?.len}); // 0
 std.debug.print("missing: {}\n", .{users.get("missing") == null}); // true (null)
 ```
 
+> [!NOTE]
+> An empty value (`""`) is different from a missing key. `exists()` returns `true` for empty values.
+
 ## TTL
 
 ```zig
@@ -97,6 +98,9 @@ try batch.delete(users, "3:name");
 try batch.clear(posts);
 try batch.commit();
 ```
+
+> [!IMPORTANT]
+> Always call `batch.deinit()` to free resources, even if you don't commit the batch.
 
 ## Transactions
 
@@ -155,6 +159,9 @@ if (db.hasCollection("users")) {
 const deleted = try db.deleteCollection("users");
 ```
 
+> [!CAUTION]
+> `deleteCollection()` permanently removes all entries in the collection. This operation cannot be undone.
+
 ## Maintenance
 
 ```zig
@@ -162,3 +169,6 @@ try db.compact();
 try db.checkpoint();
 const size = db.estimateSize();
 ```
+
+> [!NOTE]
+> Run `compact()` periodically to reclaim free space. Use `checkpoint()` to flush the WAL to the main database.

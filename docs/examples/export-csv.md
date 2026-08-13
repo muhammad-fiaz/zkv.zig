@@ -1,11 +1,9 @@
----
-title: Export CSV
-description: Export database to CSV format for spreadsheets and data analysis with zkv.zig.
----
-
 # Export CSV
 
 Export your database to CSV format for use in spreadsheets, data analysis tools, and other applications.
+
+> [!TIP]
+> CSV exports work great with Excel, Google Sheets, and LibreOffice Calc for sharing data with non technical users.
 
 ## Usage
 
@@ -64,4 +62,4 @@ pub fn main() !void {
 
 - Open in Excel, Google Sheets, or LibreOffice Calc
 - Import into SQL databases
-- Share data with non-technical users
+- Share data with non technical users

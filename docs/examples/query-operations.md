@@ -1,11 +1,9 @@
----
-title: Query Operations
-description: Search, filter, sorted entries, find, and iterators.
----
-
 # Query Operations
 
 Search by prefix, filter with predicates, sort entries, and iterate over ranges.
+
+> [!TIP]
+> Use `prefix()` for efficient iteration over key patterns, and `filter()` for custom predicate based searches.
 
 ```zig
 const std = @import("std");

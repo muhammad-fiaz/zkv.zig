@@ -1,11 +1,9 @@
----
-title: Export JSONL
-description: Export database to JSONL format for interoperability with zkv.zig.
----
-
 # Export JSONL
 
 Export your database to [JSON Lines](https://jsonlines.org/) format for interoperability with other tools and languages.
+
+> [!TIP]
+> JSONL is great for piping data to `jq` for command line analysis or importing into Elasticsearch and other databases.
 
 ## Usage
 
@@ -63,4 +61,4 @@ pub fn main() !void {
 
 - Pipe data to `jq` for analysis
 - Import into Elasticsearch, PostgreSQL, or other databases
-- Debug database contents in a human-readable format
+- Debug database contents in a human readable format

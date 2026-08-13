@@ -1,11 +1,9 @@
----
-title: Collections
-description: Named collections, isolation, entries, keys, values, and clear.
----
-
 # Collections
 
 Named collections provide namespace isolation for your data.
+
+> [!NOTE]
+> Collections are created lazily on first access. There is no explicit create step.
 
 ```zig
 const std = @import("std");

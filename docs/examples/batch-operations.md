@@ -1,11 +1,9 @@
----
-title: Batch Operations
-description: Batch set, delete, and clear with collections.
----
-
 # Batch Operations
 
-Efficiently insert and remove multiple entries at once using collection-aware batch operations.
+Efficiently insert and remove multiple entries at once using collection aware batch operations.
+
+> [!IMPORTANT]
+> Batch operations are not atomic. If you need atomicity across multiple operations, use transactions instead.
 
 ```zig
 const std = @import("std");

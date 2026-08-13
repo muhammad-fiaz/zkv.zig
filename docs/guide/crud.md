@@ -1,6 +1,6 @@
 ---
 title: CRUD Operations
-description: Create, read, update, and delete key-value pairs in zkv.zig.
+description: Create, read, update, and delete key value pairs in zkv.zig.
 ---
 
 # CRUD Operations
@@ -12,7 +12,7 @@ var db = try zkv.Database.open(allocator, .{ .path = "data.zkv" });
 defer db.close();
 ```
 
-## Collection-First API
+## Collection First API
 
 All CRUD operations go through collections:
 
@@ -22,7 +22,7 @@ const users = db.collection("users");
 
 ## Set (Create/Update)
 
-Insert or update a key-value pair:
+Insert or update a key value pair:
 
 ```zig
 try users.set("1:name", "Alice");
@@ -89,6 +89,9 @@ std.debug.print("len: {}\n", .{users.get("1:bio").?.len}); // 0
 // Missing key returns null
 std.debug.print("missing: {}\n", .{users.get("missing") == null}); // true
 ```
+
+> [!IMPORTANT]
+> An empty string `""` is a valid value — it is not the same as a missing key. Use `exists()` to distinguish between the two.
 
 ## Keys and Values
 

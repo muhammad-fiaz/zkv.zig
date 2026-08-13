@@ -19,11 +19,12 @@
 
 </div>
 
----
-
 ## Why ZKV?
 
-ZKV is an **intentionally flat** embedded key-value database. No hierarchies, no document trees, no query planners. Just **key → value** at maximum speed with minimum overhead.
+ZKV is an **intentionally flat** embedded key-value database. No hierarchies, no document trees, no query planners. Just **key to value** at maximum speed with minimum overhead.
+
+> [!NOTE]
+> ZKV is intentionally flat. If you need nested document storage, consider a different approach.
 
 ### When to use ZKV
 
@@ -42,11 +43,11 @@ ZKV is an **intentionally flat** embedded key-value database. No hierarchies, no
 
 A flat key-value model eliminates unnecessary overhead:
 
-- **No schema evolution** — add any key at any time
-- **No type system overhead** — values are byte strings, your app interprets them
-- **No query planning** — sorted B+Tree gives O(log n) lookups, range scans, prefix iteration
-- **No ORM, no serialization layer** — store exactly what you need
-- **Minimal code size** — the entire library compiles to a small binary
+- **No schema evolution** add any key at any time
+- **No type system overhead** values are byte strings, your app interprets them
+- **No query planning** sorted B+Tree gives O(log n) lookups, range scans, prefix iteration
+- **No ORM, no serialization layer** store exactly what you need
+- **Minimal code size** the entire library compiles to a small binary
 
 ### Nested data with flat storage
 
@@ -54,17 +55,16 @@ You can achieve **nested logical data while keeping the storage completely flat*
 
 ```
 Logical structure          Flat keys in ZKV
-─────────────────          ─────────────────
 users                     users collection
-└── 1                     1:name              → Alice
-    ├── name → Alice      1:age               → 30
-    ├── age → 30          1:profile:city      → Chennai
-    └── profile           1:profile:country   → India
-        ├── city → Chennai
-        └── country → India
+  1                       1:name              = Alice
+    name = Alice          1:age               = 30
+    age = 30              1:profile:city      = Chennai
+    profile               1:profile:country   = India
+      city = Chennai
+      country = India
 ```
 
-The database only sees `key → value`. It doesn't need to understand that `:` represents nesting.
+The database only sees `key to value`. It doesn't need to understand that `:` represents nesting.
 
 #### Prefix queries
 
@@ -83,7 +83,7 @@ while (iter.next()) |entry| {
 #### Arbitrary depth
 
 ```zig
-// Store deeply nested data — physically flat, logically nested
+// Store deeply nested data, physically flat, logically nested
 try users.set("1:settings:notifications:email", "true");
 try users.set("1:settings:theme:dark", "1");
 
@@ -94,32 +94,16 @@ while (settings.next()) |entry| {
 }
 ```
 
-```
-Application
-     │
-     │ logical paths
-     ▼
-users.prefix("1:settings:")
-     │
-     │ flattened keys
-     ▼
-"1:settings:theme:dark" → "1"
-     │
-     ▼
-     ZKV storage (flat)
-```
-
 ### Separator recommendation
 
 | Separator | Example | When to use |
 |-----------|---------|-------------|
-| `:` | `user:1:profile:city` | Default — works everywhere |
+| `:` | `user:1:profile:city` | Default, works everywhere |
 | `.` | `user.1.profile.city` | Dot-notation feel |
 | `/` | `user/1/profile/city` | Path-like APIs |
 
-Treat the entire key as opaque bytes. ZKV never interprets separators.
-
----
+> [!TIP]
+> Treat the entire key as opaque bytes. ZKV never interprets separators.
 
 ## Quick Start
 
@@ -164,27 +148,23 @@ pub fn main() !void {
 }
 ```
 
----
-
 ## Features
 
-- **Collection-First API**: Organize data with named collections using `db.collection("name")`
-- **Flat Key-Value Storage**: No unnecessary hierarchy, no schema, maximum simplicity
-- **Nested Logical Data**: Achieve nested structures via key prefixes/paths while storage stays flat
-- **Empty Values**: Store zero-length values — distinct from missing keys
-- **ACID Transactions**: Full support for atomic, consistent, isolated, durable operations
-- **MVCC Isolation**: Snapshot isolation for concurrent read/write operations
-- **WAL-based Crash Recovery**: Write-ahead logging for durability and crash recovery
-- **Configurable Compression**: Choose `.none`, `.zstd`, `.brotli`, `.gzip` for automatic compression; `.lzma`, `.xz` for decompression
-- **TTL Support**: Time-to-live for keys with automatic expiration and purging
-- **Rich Query API**: Iteration, search, find, filter, sort, and find-and-replace operations
-- **Batch Operations**: Efficient bulk set and delete operations with collection parameters
-- **Backup & Restore**: `exportData()` and `importData()` for lossless database copies
-- **Export/Import**: JSONL and CSV formats for interoperability with other tools
-- **Snapshots**: In-memory point-in-time snapshots via `getSnapshot()`
-- **Cross-Platform**: Windows, Linux, macOS on x86_64 and aarch64
-
----
+- **Collection First API** Organize data with named collections using `db.collection("name")`
+- **Flat Key Value Storage** No unnecessary hierarchy, no schema, maximum simplicity
+- **Nested Logical Data** Achieve nested structures via key prefixes/paths while storage stays flat
+- **Empty Values** Store zero length values, distinct from missing keys
+- **ACID Transactions** Full support for atomic, consistent, isolated, durable operations
+- **MVCC Isolation** Snapshot isolation for concurrent read/write operations
+- **WAL based Crash Recovery** Write ahead logging for durability and crash recovery
+- **Configurable Compression** Choose `.none`, `.zstd`, `.brotli`, `.gzip` for automatic compression; `.lzma`, `.xz` for decompression
+- **TTL Support** Time to live for keys with automatic expiration and purging
+- **Rich Query API** Iteration, search, find, filter, sort, and find and replace operations
+- **Batch Operations** Efficient bulk set and delete operations with collection parameters
+- **Backup and Restore** `exportData()` and `importData()` for lossless database copies
+- **Export Import** JSONL and CSV formats for interoperability with other tools
+- **Snapshots** In memory point in time snapshots via `getSnapshot()`
+- **Cross Platform** Windows, Linux, macOS on x86_64 and aarch64
 
 ## Configuration
 
@@ -209,16 +189,17 @@ var db = try zkv.Database.open(allocator, .{
 |--------|------|---------|-------------|
 | `path` | `[]const u8` | `"data.zkv"` | Database file path |
 | `create_if_missing` | `bool` | `true` | Create file if it doesn't exist |
-| `read_only` | `bool` | `false` | Open in read-only mode |
+| `read_only` | `bool` | `false` | Open in read only mode |
 | `page_size` | `u32` | `4096` | Internal B+Tree page size |
 | `max_key_size` | `usize` | `1024` | Maximum key length in bytes |
 | `max_value_size` | `usize` | `1048576` | Maximum value length in bytes |
-| `cache_size_bytes` | `usize` | `1048576` | In-memory cache size |
+| `cache_size_bytes` | `usize` | `1048576` | In memory cache size |
 | `checksum` | `ChecksumKind` | `.crc32c` | Data integrity checksum (`.crc32c` or `.xxhash`) |
-| `wal_enabled` | `bool` | `true` | Enable write-ahead log for crash recovery |
+| `wal_enabled` | `bool` | `true` | Enable write ahead log for crash recovery |
 | `compression` | `Compression` | `.none` | Compression: `.none`, `.zstd`, `.brotli`, `.gzip` (write); `.lzma`, `.xz` (decompress only) |
 
----
+> [!IMPORTANT]
+> `.lzma` and `.xz` support decompression only. The Zig standard library does not provide compression for these formats.
 
 ## Installation
 
@@ -261,8 +242,6 @@ const zkv_dep = b.dependency("zkv", .{
 exe.root_module.addImport("zkv", zkv_dep.module("zkv"));
 ```
 
----
-
 ## API Reference
 
 ### Database Lifecycle
@@ -275,7 +254,7 @@ exe.root_module.addImport("zkv", zkv_dep.module("zkv"));
 | `Database.batch()` | Create a batch for bulk operations |
 | `Database.checkpoint()` | Flush WAL to main database |
 | `Database.compact()` | Reclaim free space |
-| `Database.estimateSize()` | Estimate in-memory size |
+| `Database.estimateSize()` | Estimate in memory size |
 | `Database.info()` | Get database info (entries, size, collections) |
 | `Database.exportData(format)` | Export to buffer (raw/jsonl/csv) |
 | `Database.importData(data, format)` | Import from buffer |
@@ -284,13 +263,13 @@ exe.root_module.addImport("zkv", zkv_dep.module("zkv"));
 
 | Method | Description |
 |--------|-------------|
-| `collection.set(key, value)` | Insert or update a key-value pair |
+| `collection.set(key, value)` | Insert or update a key value pair |
 | `collection.get(key)` | Retrieve a value by key (returns `?[]const u8`) |
-| `collection.delete(key)` | Remove a key-value pair |
+| `collection.delete(key)` | Remove a key value pair |
 | `collection.exists(key)` | Check if a key exists |
 | `collection.count()` | Get number of entries in collection |
 | `collection.clear()` | Remove all entries in collection |
-| `collection.entries()` | Get all key-value pairs |
+| `collection.entries()` | Get all key value pairs |
 | `collection.keys()` | Get all keys |
 | `collection.values()` | Get all values |
 | `collection.iterator(from, to)` | Iterate over key ranges |
@@ -306,7 +285,7 @@ exe.root_module.addImport("zkv", zkv_dep.module("zkv"));
 
 ### Batch Operations
 
-Batch operations accept a `Collection` parameter for namespace-aware bulk writes:
+Batch operations accept a `Collection` parameter for namespace aware bulk writes:
 
 ```zig
 var batch = db.batch();
@@ -352,11 +331,14 @@ _ = try db.update({}, void, &(struct {
 |--------|-------------|
 | `db.begin(read_only)` | Begin a transaction |
 | `db.transaction()` | Convenience: begin write transaction |
-| `db.readTransaction()` | Convenience: begin read-only transaction |
+| `db.readTransaction()` | Convenience: begin read only transaction |
 | `db.commitTransaction(&txn)` | Commit and apply transaction |
 | `db.rollbackTransaction(&txn)` | Rollback transaction |
-| `db.view(context, T, func)` | Auto-rollback read transaction |
-| `db.update(context, T, func)` | Auto-commit write transaction |
+| `db.view(context, T, func)` | Auto rollback read transaction |
+| `db.update(context, T, func)` | Auto commit write transaction |
+
+> [!NOTE]
+> `commitTransaction` calls `txn.deinit()` internally. Do not call `deinit` again.
 
 ### Query Operations
 
@@ -368,7 +350,7 @@ _ = try db.update({}, void, &(struct {
 | `db.findAndReplace(context, predicate, new_value)` | Replace matching values |
 | `db.sortedEntries(context, comparator, options)` | Sort entries by custom comparator |
 
-### Export/Import
+### Export Import
 
 | Method | Description |
 |--------|-------------|
@@ -378,7 +360,8 @@ _ = try db.update({}, void, &(struct {
 | `db.importData(data, format)` | Import from buffer |
 | `db.getSnapshot()` | Get all entries as ArrayList |
 
----
+> [!TIP]
+> Use `exportData` and `importData` for simple backup/restore. Use `exportTo`/`importFrom` for streaming large datasets.
 
 ## Value Semantics
 
@@ -387,15 +370,15 @@ ZKV supports three distinct key states:
 | State | Description | `get()` returns | `exists()` returns |
 |-------|-------------|----------------|-------------------|
 | **Missing** | Key does not exist | `null` | `false` |
-| **Empty** | Key exists with zero-length value | `""` (empty slice) | `true` |
+| **Empty** | Key exists with zero length value | `""` (empty slice) | `true` |
 | **Value** | Key exists with bytes | `"data"` | `true` |
 
 ```zig
-// Missing key — does not exist
+// Missing key, does not exist
 std.debug.print("exists: {}\n", .{users.exists("missing")}); // false
 std.debug.print("get: {}\n", .{users.get("missing") == null}); // true (null)
 
-// Empty value — key exists, zero bytes
+// Empty value, key exists, zero bytes
 try users.set("bio", "");
 std.debug.print("exists: {}\n", .{users.exists("bio")}); // true
 std.debug.print("value len: {}\n", .{users.get("bio").?.len}); // 0
@@ -410,9 +393,8 @@ try users.delete("name");
 std.debug.print("exists: {}\n", .{users.exists("name")}); // false
 ```
 
-Empty values are stored as valid entries with zero-length byte strings. They are **not** the same as missing keys or null values.
-
----
+> [!IMPORTANT]
+> Empty values are stored as valid entries with zero length byte strings. They are **not** the same as missing keys or null values.
 
 ## Building
 
@@ -443,8 +425,8 @@ zig build run-value_states
 
 ```bash
 zig build test             # Run all unit tests
-zig build -Dtarget=x86_64-linux-gnu test  # Cross-compile test
-zig build -Dtarget=aarch64-macos test     # Cross-compile test
+zig build -Dtarget=x86_64-linux-gnu test  # Cross compile test
+zig build -Dtarget=aarch64-macos test     # Cross compile test
 ```
 
 ## Documentation
@@ -455,20 +437,16 @@ Full documentation is available at [muhammad-fiaz.github.io/zkv.zig](https://muh
 - [API Reference](https://muhammad-fiaz.github.io/zkv.zig/api/)
 - [Examples](https://muhammad-fiaz.github.io/zkv.zig/examples/)
 
----
-
 ## Performance
 
 ZKV is designed for maximum throughput with minimal overhead:
 
-- **B+Tree storage** — sorted keys give O(log n) lookups and efficient range scans
-- **In-memory indexing** — all keys kept sorted in memory for fast iteration
-- **WAL batching** — write-ahead log batches I/O for sequential writes
-- **Internal compression** — automatic zstd/brotli compression with zero configuration
-- **No runtime dependencies** — pure Zig, no allocator surprises
-- **Zero-copy iteration** — iterators return slices into existing data
-
----
+- **B+Tree storage** sorted keys give O(log n) lookups and efficient range scans
+- **In memory indexing** all keys kept sorted in memory for fast iteration
+- **WAL batching** write ahead log batches I/O for sequential writes
+- **Internal compression** automatic zstd/brotli compression with zero configuration
+- **No runtime dependencies** pure Zig, no allocator surprises
+- **Zero copy iteration** iterators return slices into existing data
 
 ## Related Projects
 
@@ -490,7 +468,7 @@ Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md)
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License, see the [LICENSE](LICENSE) file for details.
 
 Copyright (c) 2026 Muhammad Fiaz
 

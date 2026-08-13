@@ -1,11 +1,11 @@
 ---
 title: Transactions
-description: Atomic multi-key operations with transactions in zkv.zig.
+description: Atomic multi key operations with transactions in zkv.zig.
 ---
 
 # Transactions
 
-ACID transactions ensure atomicity, consistency, isolation, and durability for multi-key operations.
+ACID transactions ensure atomicity, consistency, isolation, and durability for multi key operations.
 
 ## Begin a Transaction
 
@@ -45,7 +45,7 @@ Discard all changes:
 try db.rollbackTransaction(&txn);
 ```
 
-## view() - Auto-Rollback Read
+## view() - Auto Rollback Read
 
 Read within a transaction that automatically rolls back:
 
@@ -57,7 +57,10 @@ const result = try db.view(null, ?[]const u8, &(struct {
 }.f));
 ```
 
-## update() - Auto-Commit Write
+> [!NOTE]
+> `view()` is read only and automatically rolls back when the closure returns — no manual cleanup needed.
+
+## update() - Auto Commit Write
 
 Write within a transaction that automatically commits:
 
@@ -69,6 +72,9 @@ try db.update(null, void, &(struct {
     }
 }.f));
 ```
+
+> [!IMPORTANT]
+> `update()` automatically commits all writes when the closure completes. If the closure returns early, changes are still committed.
 
 ## Example: Bank Transfer
 
@@ -87,3 +93,6 @@ try txn.put("account:alice:balance", "0");
 try db.rollbackTransaction(&txn);
 // Alice's balance unchanged
 ```
+
+> [!CAUTION]
+> Always call `commitTransaction()` or `rollbackTransaction()` to avoid leaving uncommitted transactions open.

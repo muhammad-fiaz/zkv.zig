@@ -31,6 +31,9 @@ const results = try db.filter(null, struct {
 defer results.deinit(allocator);
 ```
 
+> [!TIP]
+> Use `filter()` for complex queries that cannot be expressed with prefix matching alone.
+
 ## Find First Match
 
 Return the first entry matching a predicate:
@@ -96,3 +99,6 @@ const items = db.collection("items");
 var result = items.range("a", "d");
 defer result.deinit(allocator);
 ```
+
+> [!NOTE]
+> Range queries are inclusive on both ends. Use `prefix()` for all entries starting with a given string.

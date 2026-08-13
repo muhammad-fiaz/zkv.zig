@@ -5,7 +5,7 @@ description: Efficient bulk put, delete, and prefix operations in zkv.zig.
 
 # Batch Operations
 
-Batch operations accept a `Collection` parameter for namespace-aware bulk writes.
+Batch operations accept a `Collection` parameter for namespace aware bulk writes.
 
 ## Batch Set
 
@@ -58,6 +58,9 @@ var batch = db.batch();
 try batch.set(users, "1:name", "Alice");
 batch.rollback(); // discard, nothing committed
 ```
+
+> [!TIP]
+> Use `rollback()` to safely discard a batch if you detect an error before committing.
 
 ## Delete by Prefix
 

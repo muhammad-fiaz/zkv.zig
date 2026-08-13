@@ -1,8 +1,3 @@
----
-title: Export/Import API
-description: Export and import operations for zkv.zig
----
-
 # Export/Import API
 
 Export and import database contents for backup, migration, or data transfer.
@@ -28,8 +23,8 @@ defer std.heap.page_allocator.free(csv);
 | Format | Description |
 |--------|-------------|
 | `.raw_snapshot` | Native binary format with ZKV header, fastest |
-| `.jsonl` | JSON Lines — one JSON object per line, human-readable |
-| `.csv` | Comma-separated values, spreadsheet-compatible |
+| `.jsonl` | JSON Lines — one JSON object per line, human readable |
+| `.csv` | Comma separated values, spreadsheet compatible |
 
 ## Quick Import
 
@@ -56,6 +51,9 @@ defer file2.close();
 const imported = try db.importFrom(file2.reader(), .{ .format = .raw_snapshot });
 ```
 
+> [!TIP]
+> Use streaming export/import for large datasets to avoid loading everything into memory.
+
 ## Snapshot
 
 ```zig
@@ -79,6 +77,9 @@ var restored = try zkv.Database.open(allocator, .{ .path = "restored.zkv" });
 defer restored.close();
 const count = try restored.importData(backup, .raw_snapshot);
 ```
+
+> [!IMPORTANT]
+> Always test your backup and restore process. Verify data integrity after restore.
 
 ## Export to JSONL
 

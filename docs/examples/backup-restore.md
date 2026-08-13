@@ -1,11 +1,9 @@
----
-title: Backup & Restore
-description: First-class backup/restore for lossless database copies with zkv.zig.
----
+# Backup and Restore
 
-# Backup & Restore
+The simplest way to copy a database. Use `exportData()` and `importData()` with `.raw_snapshot` for lossless, full fidelity copies.
 
-The simplest way to copy a database. Use `exportData()` and `importData()` with `.raw_snapshot` for lossless, full-fidelity copies.
+> [!NOTE]
+> The `.raw_snapshot` format produces a binary copy that is fast but not portable to other tools. For interoperability, use `.jsonl` or `.csv` instead.
 
 ## Backup
 

@@ -1,11 +1,9 @@
----
-title: Open & Close
-description: Database lifecycle, in-memory behavior, and read-only mode.
----
+# Open and Close
 
-# Open & Close
+Database lifecycle management, in memory data behavior, and read only mode.
 
-Database lifecycle management, in-memory data behavior, and read-only mode.
+> [!CAUTION]
+> Data in in memory mode is lost when the database is closed. Always use a file path for persistent storage.
 
 ```zig
 const std = @import("std");
@@ -27,16 +25,16 @@ pub fn main() !void {
         db.close();
     }
 
-    // Fresh database (in-memory only)
+    // Fresh database (in memory only)
     {
         var db = try zkv.Database.open(allocator, .{
             .path = "examples/open_close.zkv",
         });
         defer db.close();
-        // Data was in-memory only, starts empty
+        // Data was in memory only, starts empty
     }
 
-    // Read-only mode
+    // Read only mode
     {
         var db = try zkv.Database.open(allocator, .{
             .path = "examples/open_close.zkv",
@@ -44,7 +42,7 @@ pub fn main() !void {
         });
         defer db.close();
         const result = db.collection("test").set("key", "value");
-        std.debug.print("Write in read-only: {}\n", .{result == error.ReadOnlyDatabase});
+        std.debug.print("Write in read only: {}\n", .{result == error.ReadOnlyDatabase});
     }
 }
 ```
