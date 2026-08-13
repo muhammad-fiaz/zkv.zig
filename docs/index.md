@@ -8,7 +8,7 @@ hero:
   text: Embedded Key Value Database for Zig
   tagline: A super-fast, lightweight embedded key value database for Zig with ACID transactions, TTL, compression, and more.
   image:
-    src: /cover.png
+    src: /android-chrome-512x512.png
     alt: zkv.zig
   actions:
     - theme: brand
